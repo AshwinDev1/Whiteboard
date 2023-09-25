@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAABcCAMAAADUMSJqAAAAYFBMVEX///8AAABLS0uWlpbPz8+0tLTw8PDo6Oi5ubnz8/P7+/tycnIvLy9FRUWrq6vExMQhISHa2tpSUlJhYWEnJydaWlrg4OCOjo42NjZ5eXmhoaE/Pz8ODg4bGxtsbGyDg4Os3/iIAAADUUlEQVRoge2Y27KiMBFCZdwJ0QF5CLn//9yuhMQT4iOJLFmHtwPapXWou3d6XTieV999d+I575z5VyyI/IRRchuL5+BX1qAD4T4qetMpz4hA7wHhDDXbM9jhAQSHrqHh4/wwWW6BwVeuoSXChwMcFXiQNrDXaX7X8FpGIbth+DVCQwpOptV9RQeLH4XmXs4rCty6np47d3Dz4T8UC+DZxTcOZyQK8Xvu6VjemlUigbkBu6L76O1HZ/lYv4EvL0Ce6ocwxMJh7K8BPFB9gt43ed53p8EnJN7N6Zz/nZ2nsPvAvjPVpExIblbeL5tI27gJY3jmA4rfK127gT+WC29/IEnf3SiTuEVLFTZwdICEpU4hXs3QhqeeRlvhA3svW72JhzKndz6oIeHXGr4PAevoAfh20wwRa14t4HvFM447BUz7E20uzqGe1nIGOMy2S17y1PzDRqWwd9K0hg+jGBx9bpqTOGVtLf7BJyDuw3uHz1/MX0YwqHu5zQTE8L1Od0QDuWP29KPoD/dwc0jB2Z6Fom/hjyKdJO9IZzCoO2HOVoKC+pa6DdY02ppa9kMEq8dl8awpxvXObvPA9h2/FkXu/kKDZbGHsJ/OLXprIndHI4n4iDzGLB9GDrSfk83h2cd0jHuUdRiuB+bbE4WnTSyEcMSu+xdtYHLFToKdgjVWJ6V2K3ORJgJX6x+jmyuumoFh0V0uudk3LtqCxck7JHS1ax5zIwVvJOlHl7W7EDs+UPsVnAKM3CdoJdb30X6GrvdITdGerHmZKGf77Fr4UdV/joWCFcXqXCDWwvlNLC0efFYBc7KY1cT0B0n5YJJuDoBp2QK/KjQ1ZsyIyG9lkfMB7jJHRe6uot9c3W548JZhIXHlWhmduHqAF+y5Sm0OO7lXbVK31wtxNjHbehqSmm+spdFQKvAUI3GVczMGFTvnqCeK/Y1rjZbzdiJYo6V2DPNvmpI9zWuaicOE8WNxtV5/3/MRJ+4Wh++7tAJXb2pro6O0q51NdmO9rb0vaudM/jeVbZ32Vzo6rTFnkwHrlD+rvgxMzimlk6KZaVvrmJOzi7Z68QBHxIcr+371m+JvamKqwmPBY7ZS72jGtdxo2J5o9S4zfeqLGr8JrK4e//qq4/oD7MdKYMdxjCKAAAAAElFTkSuQmCC"/>
+    <title>Whiteboard</title>
+    <style>
+        * {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+        }
+
+        #header {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-size: 60px;
+            font-family: cursive;
+        }
+
+        #canvas {
+            background-color: white;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .toolbox {
+            background-color: red;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #size-slider {
+            width: 80%;
+            margin-top: 10px;
+        }
+        h3{
+            color:white;
+            font-size: 60;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1 id="header">Whiteboard</h1>
+
+<div class="toolbox">
+    <canvas id="canvas" width="800" height="400"></canvas>
+    <div class="options">
+        <div class="tools" id="tools-section">
+            <div class="tools-row">
+                <div class="tools-wrapper">
+                    <h5>Color: </h5>
+                    <input type="color" id="color-input" />
+                </div>
+                <div class="tools-wrapper">
+                    <h5>Size:</h5>
+                    <input type="range" id="size-slider" min="1" max="20" value="2" />
+                </div>
+                <div class="tools-wrapper">
+                    <h5>Eraser:</h5>
+                    <input type="checkbox" id="eraser-checkbox" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<h3>To clear whiteboard reload the page</h3>
+<script>
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
+    const colorInput = document.getElementById("color-input");
+    const sizeSlider = document.getElementById("size-slider");
+    const eraserCheckbox = document.getElementById("eraser-checkbox");
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => {
+        drawing = true;
+        context.beginPath();
+    });
+
+    canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        context.closePath();
+    });
+
+    canvas.addEventListener("mousemove", draw);
+
+    colorInput.addEventListener("input", () => {
+        context.strokeStyle = colorInput.value;
+    });
+
+    sizeSlider.addEventListener("input", () => {
+        context.lineWidth = sizeSlider.value;
+    });
+
+    eraserCheckbox.addEventListener("change", () => {
+        if (eraserCheckbox.checked) {
+            context.strokeStyle = "white";
+        } else {
+            context.strokeStyle = colorInput.value;
+        }
+    });
+
+    function draw(e) {
+        if (!drawing) return;
+
+        context.lineCap = "round";
+
+        context.lineTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+        context.stroke();
+        context.beginPath();
+        context.moveTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+    }
+</script>
+</body>
+</html>
